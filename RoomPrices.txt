@@ -1,0 +1,3 @@
+Single,100,30
+Double,199,40
+Suite,500,60

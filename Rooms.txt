@@ -1,0 +1,4 @@
+9,Single
+10,Double
+105,Single
+100,Single
