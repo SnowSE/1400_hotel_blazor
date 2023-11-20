@@ -1,0 +1,12 @@
+@rendermode InteractiveServer
+
+<p>This is a sample reusable component</p>
+<button @onclick="click">Clicked @count times</button>
+
+@code {
+    int count = 0;
+    void click()
+    {
+        count++;
+    }
+}
