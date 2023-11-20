@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hotel.Logic.Tests", "Hotel.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hotel.UI", "Hotel.UI\Hotel.UI.csproj", "{B673C066-A45C-4014-AF5A-B87B7723C5F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hotel.Web", "Hotel.Web\Hotel.Web.csproj", "{8B78791A-A4A1-4CAA-B5D9-CCC0E364D839}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{B673C066-A45C-4014-AF5A-B87B7723C5F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B673C066-A45C-4014-AF5A-B87B7723C5F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B673C066-A45C-4014-AF5A-B87B7723C5F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B78791A-A4A1-4CAA-B5D9-CCC0E364D839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B78791A-A4A1-4CAA-B5D9-CCC0E364D839}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B78791A-A4A1-4CAA-B5D9-CCC0E364D839}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B78791A-A4A1-4CAA-B5D9-CCC0E364D839}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

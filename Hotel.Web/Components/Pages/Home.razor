@@ -1,0 +1,53 @@
+﻿@page "/"
+@using Logic
+@rendermode InteractiveServer
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new playground CS 1400 Final Project.
+
+<p>Current count: @count</p>
+<p>Message: @message</p>
+
+<h3>Rooms</h3>
+<ul>
+    @foreach (var room in CurrentData.RoomsList)
+    {
+        <li>@room.roomNumber is @room.roomType</li>
+    }
+</ul>
+
+<div class="row">
+    <label>Room Number
+        <input type="number" @bind=newRoomNumber>
+    </label>
+    <label>Room Type
+        <input type="text" @bind=newRoomType>
+    </label>
+    <button @onclick=addRoom>Add Room</button>
+</div>
+
+This is the end of the list.<br />
+
+<button @onclick="click">Click Me</button>
+
+@code {
+    int newRoomNumber;
+    string newRoomType;
+    int count = 0;
+    string message = "";
+
+    void click()
+    {
+        message = "I clicked it!";
+        count++;
+    }
+
+    void addRoom()
+    {
+        var roomType = Enum.Parse<Data.RoomType>(newRoomType);
+        CurrentData.RoomsList.Add((newRoomNumber, roomType));
+    }
+}
