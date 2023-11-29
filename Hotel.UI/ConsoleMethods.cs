@@ -519,6 +519,31 @@ public static class RequestUserInput
         return listOfCustomersWithName[indexOfClarifyingCardNumber].freqTravelerStatus;
     }
 
+    public static bool ClarifyStatusOfNonUniqueCustomer(List<(string customerName, long cardNumber, bool freqTravelerStatus)> listOfCustomersWithName, long firstCardNumber)
+    {
+        List<long> listOfValidCardNumbers = new();
+
+        
+        foreach (var (_, cardNumber, _) in listOfCustomersWithName)
+        {
+            listOfValidCardNumbers.Add(cardNumber);
+        }
+
+        // this will allow user to type a number that corresponds to their target card number, instead of having to write out the entire thing perfectly
+        // how it'll work: the typed number will correspond to the index of each valid cardNumber in listOfValidCardNumbers
+        int index = 0;
+        foreach (var cardNumber in listOfValidCardNumbers)
+        {
+            if(cardNumber == firstCardNumber)
+            {
+                break;
+            }
+            index++;
+        }
+
+        return listOfCustomersWithName[index].freqTravelerStatus;
+    }
+
     /// <summary>
     /// Returns the "clarifying reservation number". Can help differentiate between reservations made under the same customer name. Will only let through once a valid reservation number (one of the reservations has that reservation number) is entered
     /// </summary>
@@ -632,6 +657,31 @@ public static class SubMenuBundles
         ConsoleMethods.EndingMessage("\nCustomer added to file!");
     }
 
+    public static string NewCustomer(string customerName, long cardNumber, bool freqTravelerStatus)
+    {
+        bool returnToMenuNow;
+        while (true)
+        {
+            var listOfCustomersWithName = HelperFunctions.ListOfCustomersWithName(customerName);
+
+            // do not accept if BOTH customerName and cardNumber are duplicate of the same customer in Customers.txt. Ruins uniqueness & causes funky things when it comes to looking up a customer
+            if (listOfCustomersWithName.Count >= 1 && HelperFunctions.CardNumberIsInHere(cardNumber, listOfCustomersWithName))
+            {
+                return $"There are {listOfCustomersWithName.Count} customers on file with the name {customerName}. One of them already has the card number {cardNumber}!";
+            }
+            else
+            {
+                break;
+            }
+        }
+
+
+        CurrentData.CustomersList.Add((customerName, cardNumber, freqTravelerStatus));
+        FileManager.WriteUpCustomers(CurrentData.SerializeData(CurrentData.CustomersList));
+
+        return "Customer added to file!";
+    }
+
     public static void NewReservation()
     {
         bool returnToMenuNow;
@@ -698,6 +748,54 @@ public static class SubMenuBundles
         FileManager.WriteUpReservations(CurrentData.SerializeData(CurrentData.ReservationsList));
 
         ConsoleMethods.EndingMessage("\nReservation added to file!");
+    }
+
+    public static string NewReservation(DateOnly dateStart, DateOnly dateStop, int roomNumber, string customerName, long cardNumber)
+    {
+        decimal chargedFees;
+        string reservationNumber = Guid.NewGuid().ToString();
+        bool customerIsFreqTraveler;
+
+        while (true)
+        {
+
+            if (dateStart > dateStop)
+            {
+                return "End date should not come before the starting date!";
+            }
+
+            if (CurrentData.UnreservedRoomNumbers(CurrentData.ReservationsDuring(dateStart, dateStop)).Count == 0)
+            {
+                return $"None of our rooms are available during {dateStart} - {dateStop}!";
+            }
+
+            if (!CurrentData.OverlapWithExistingReservation(dateStart, dateStop, roomNumber))
+            {
+                break;
+            }
+            else
+            {
+                return "That room is already reserved during that time!";
+            }
+        }
+
+        
+        customerIsFreqTraveler = CurrentData.IsFreqTraveler(customerName);
+
+        var listOfCustomersWithName = HelperFunctions.ListOfCustomersWithName(customerName);
+
+        if (listOfCustomersWithName.Count > 1) // duplicate: needs more info for accurate identification to determine chargedFees()
+        {
+            customerIsFreqTraveler = RequestUserInput.ClarifyStatusOfNonUniqueCustomer(listOfCustomersWithName, cardNumber);
+        }
+
+        chargedFees = HelperFunctions.ApplyDiscount(customerIsFreqTraveler, dateStart, dateStop, roomNumber);
+
+        string paymentConfirmation = HelperFunctions.RandomStringGenerator(30);
+
+        CurrentData.ReservationsList.Add((reservationNumber, dateStart, dateStop, roomNumber, customerName, paymentConfirmation, chargedFees));
+        FileManager.WriteUpReservations(CurrentData.SerializeData(CurrentData.ReservationsList));
+        return "Reservation added to file!";
     }
 
     public static void AvailableRoomSearch()

@@ -3,6 +3,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Hotel.Logic\Hotel.Logic.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hotel.UI\Hotel.UI.csproj" />
+  </ItemGroup>
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>

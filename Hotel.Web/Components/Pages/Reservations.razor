@@ -1,12 +1,79 @@
 @page "/reservations"
+@using Logic
+@using UI
 @rendermode InteractiveServer
 
-<h1>Reservations</h1>
+<PageTitle>Reservations</PageTitle>
 
 <SampleReusableComponent />
 
-<SampleReusableComponent />
+<table>
+    <tr>
+        <th>Reservation Number</th>
+        <th>Date Start</th>
+        <th>Date Stop</th>
+        <th>Room Number</th>
+        <th>Customer Name</th>
+        <th>Payment Confirmation</th>
+        <th>Fees Paid</th>
+    </tr>
+    @foreach (var reservation in CurrentData.ReservationsList)
+    {
+        <tr>
+            <td>@reservation.reservationNumber</td>
+            <td>@reservation.dateStart</td>
+            <td>@reservation.dateStop</td>
+            <td>@reservation.roomNumber</td>
+            <td>@reservation.customerName</td>
+            <td>@reservation.paymentConfirmation</td>
+            <td>@($"{reservation.chargedFees:c}")</td>
+        </tr>
+    }
+</table>
 
-<SampleReusableComponent />
+<p>Do we have any reservations?</p>
+<p>Maybe you want to add one?</p>
+<div class="row">
+    <label>Date Start
+        <input type="date" @bind=newDateStart>
+    </label>
+    <label>Date Stop
+        <input type="date" @bind=newDateStop>
+    </label>
+    <label>Room Number
+        <input type="number" @bind=newRoomNumber>
+    </label>
+    <label>Customer Name
+        <input type="text" @bind=newCustomerName>
+    </label>
+    <label>Card Number (Only use if your name isn't unique)
+        <input type="number" @bind=newCardNumber>
+    </label>
+    <button @onclick=addReservation>Add Reservation</button>
+    <p>@label</p>
+</div>
 
-<SampleReusableComponent />
+@code
+{
+    Guid newReservationNum = new();
+    DateOnly newDateStart;
+    DateOnly newDateStop;
+    int newRoomNumber;
+    long newCardNumber;
+    string newCustomerName;
+    string label = "";
+    List<(string, DateOnly, DateOnly, int, string, string, decimal)> reservations = new();
+
+    void addReservation()
+    {
+        try
+        {
+            label = SubMenuBundles.NewReservation(newDateStart, newDateStop, newRoomNumber, newCustomerName, newCardNumber);
+        }
+        catch (Exception ex)
+        {
+            label = ex.Message;
+        }
+        CurrentData.SerializeData(reservations);
+    }
+}
