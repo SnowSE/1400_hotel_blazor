@@ -56,8 +56,8 @@
 @code
 {
     Guid newReservationNum = new();
-    DateOnly newDateStart;
-    DateOnly newDateStop;
+    DateOnly newDateStart = DateOnly.FromDateTime(DateTime.Now);
+    DateOnly newDateStop = DateOnly.FromDateTime(DateTime.Now);
     int newRoomNumber;
     long newCardNumber;
     string newCustomerName;
